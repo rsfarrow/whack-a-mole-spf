@@ -11,7 +11,7 @@ export default new Router({
     { path: '*',
       // TODO: Check to see if the user is logged in or not - then navigate based on that
       beforeEnter: (to, from, next) => {
-        next({ name: 'HOME' })
+        next({ name: 'home' })
       }
     },
     {
