@@ -78,7 +78,7 @@
 <script>
 import Mole from '../components/mole.vue'
 import HighScores from '../components/high-scores.vue'
-const GAME_LENGTH = 5
+const GAME_LENGTH = 30
 export default {
   name: 'whack-a-mole',
   components: {
