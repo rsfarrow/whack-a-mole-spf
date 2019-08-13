@@ -9,7 +9,8 @@ export default {
   props: {
     rate: Number,
     index: Number,
-    numOfMoles: Number
+    numOfMoles: Number,
+    offset: Number
   },
   data: () => ({
     active: false,
@@ -19,10 +20,11 @@ export default {
     startTime () {
       this.timeout = setInterval(() => {
         this.getRandomTime()
-      }, this.rate * 1000)
+      }, 1000 / this.rate + this.offset)
     },
     stopTime () {
       clearTimeout(this.timeout)
+      this.timeout = ''
       this.active = false
     },
     getRandomTime () {
