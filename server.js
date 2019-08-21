@@ -6,9 +6,9 @@ const mongoose = require('mongoose')
 const path = require('path')
 const comp = require('compression')
 const expressStaticGzip = require('express-static-gzip')
-// const router = express.Router()
-// const recipeRoutes = require('./server/src/recipe/index').routes
-// const dbUrl = `mongodb+srv://testuser:${process.env.dbPass}@recipe-website-venom-w6sn2.mongodb.net/recipe?retryWrites=true`
+const auth = require('./server/src/auth/index')
+const highscore = require('./server/src/highscores/index')
+
 /**
  * Connect to the Mongoose DB
  */
@@ -34,8 +34,8 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors())
 app.use(helmet())
-// app.use(recipeRoutes)
-// app.use(express.static(path.join(__dirname, '/dist')))
+app.use(auth.usersRoutes)
+app.use(highscore.routes)
 app.use(comp())
 app.use('/', expressStaticGzip(path.join(__dirname, '/dist'), {
   enableBrotli: true,
