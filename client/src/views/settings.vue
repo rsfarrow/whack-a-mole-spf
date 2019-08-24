@@ -97,6 +97,10 @@
               <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
           </v-layout>
+          <div class="mt-3">
+            Custom Cursor:
+          </div>
+          <v-switch v-model="internalCustomCursor" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -110,7 +114,7 @@
           <v-btn
             text
             color="primary"
-            @click="$emit('click:outside', false);$emit('updateSettings', {rate: rateArray[rateIndex], moles: moleArray[moleIndex]})"
+            @click="$emit('click:outside', false);$emit('updateSettings', {rate: rateArray[rateIndex], moles: moleArray[moleIndex], customCursor: internalCustomCursor})"
           >
             Save
           </v-btn>
@@ -131,18 +135,23 @@ export default {
   props: {
     showDialog: Boolean,
     rate: Number,
-    moles: Number
+    moles: Number,
+    customCursor: Boolean
   },
   data: () => ({
     show: false,
     rateIndex: 0,
     rateArray: [1, 2, 3, 5, 7],
     moleIndex: 0,
-    moleArray: [3, 5, 7]
+    moleArray: [3, 5, 7],
+    internalCustomCursor: false
   }),
   watch: {
     showDialog () {
       this.show = this.showDialog
+    },
+    customCursor () {
+      this.internalCustomCursor = this.customCursor
     }
   },
   mounted () {

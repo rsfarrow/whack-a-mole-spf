@@ -1,7 +1,17 @@
 <template>
-  <span :class="['dot', {active: active}]"
-        @click="emitActive()"
-  />
+  <span
+    :class="['dot', {active: active}]"
+    @click="emitActive()"
+  >
+    <v-img
+      v-if="!active"
+      :src="bush"
+    />
+    <v-img
+      v-else
+      :src="moleFace"
+    />
+  </span>
 </template>
 <script>
 export default {
@@ -16,6 +26,14 @@ export default {
     active: false,
     timeout: ''
   }),
+  computed: {
+    moleFace () {
+      return require('../../../public/img/mole.png')
+    },
+    bush () {
+      return require('../../../public/img/bush.png')
+    }
+  },
   methods: {
     startTime () {
       this.timeout = setInterval(() => {
@@ -53,13 +71,12 @@ export default {
   margin: 35px;
   height: 25px;
   width: 25px;
-  background-color: lightgray;
+  /* background-color: lightgray; */
   border-radius: 50%;
   display: inline-block;
-  cursor: url('https://github.com/sfarrowbioiq/whack-a-mole-spf/blob/master/public/img/hammer.png'), default;
 }
 .active {
-  background-color: black !important;
+  /* background-color: black !important; */
 }
 .full-height {
   height: 100%;

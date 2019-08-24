@@ -27,6 +27,7 @@
       </v-row>
       <v-row
         :align-content="'center'"
+        :class="{'play-area': customCursor}"
       >
         <v-col v-for="(mole, index) in moles"
                :key="index"
@@ -41,19 +42,19 @@
             @active="score++"
           />
         </v-col>
-        <v-row />
-        <settings
-          v-model="showSettings"
-          :rate="rate"
-          :moles="moles"
-          @updateSettings="rate=$event.rate; moles=$event.moles;setUpOffset()"
-        />
-        <high-scores
-          v-model="showDialog"
-          :currentScore="score"
-          :highScores="highScores"
-        />
       </v-row>
+      <settings
+        v-model="showSettings"
+        :rate="rate"
+        :moles="moles"
+        :customCursor="customCursor"
+        @updateSettings="rate=$event.rate; moles=$event.moles;customCursor = $event.customCursor;setUpOffset()"
+      />
+      <high-scores
+        v-model="showDialog"
+        :currentScore="score"
+        :highScores="highScores"
+      />
     </v-container>
     <v-footer class="ml-auto mt-auto"
               align-end
@@ -96,6 +97,7 @@ export default {
     rate: 1,
     showDialog: false,
     showSettings: false,
+    customCursor: true,
     highScores: [{ name: 'Sam', score: '12', rate: '2', moles: '3' }, { name: 'Sam', score: '10', rate: '2', moles: '3' }, { name: 'Sam', score: '8', rate: '2', moles: '3' }, { name: 'Sam', score: '6', rate: '2', moles: '3' }, { name: 'Sam', score: '4', rate: '2', moles: '3' }]
   }),
   computed: {
@@ -138,3 +140,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.play-area {
+  cursor: url('https://github.com/sfarrowbioiq/whack-a-mole-spf/blob/master/public/img/hammer.png?raw=true'), default;
+
+}
+</style>
