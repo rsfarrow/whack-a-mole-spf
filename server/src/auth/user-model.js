@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: value => {
       if (!validator.isEmail(value)) {
-        throw new Error({ error: 'Invalid Email address' })
+        throw new Error('Invalid Email address')
       }
     }
   },
@@ -47,14 +47,10 @@ userSchema.pre('save', async function (next) {
 
 // TODO: add signing options -- mainly an exipration
 userSchema.methods.generateAuthToken = async function () {
-  console.log(' user-model | entry ')
   // Generate an auth token for the user
   const user = this
-  console.log(' user-model | user ', user)
   const token = jwt.sign({ _id: user._id }, process.env.PK)
-  console.log(' user-model | token: ', token)
   user.tokens = user.tokens.concat({ token })
-  console.log(' user-model | token finished ')
 
   await user.save()
   return token
@@ -65,11 +61,11 @@ userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email })
   console.log('schema | findOne: ', user)
   if (!user) {
-    throw new Error({ error: 'Invalid login credentials' })
+    throw new Error('Invalid login credentials')
   }
   const isPasswordMatch = await bcrypt.compare(password, user.password)
   if (!isPasswordMatch) {
-    throw new Error({ error: 'Invalid login credentials' })
+    throw new Error('Invalid login credentials')
   }
   return user
 }

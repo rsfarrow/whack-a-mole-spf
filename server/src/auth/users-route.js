@@ -9,10 +9,9 @@ router.post('/user', async (req, res) => {
   try {
     const user = new User(req.body)
     await user.save()
-    const token = await user.generateAuthToken()
-    res.status(201).send({ user, token })
+    res.status(201).send({ success: true })
   } catch (error) {
-    res.status(400).send(error)
+    res.status(400).send({ success: false, err: error.message })
   }
 })
 
@@ -25,16 +24,15 @@ router.post('/login', async (req, res) => {
       return res.status(401).send({ error: 'Login failed! Check authentication credentials' })
     }
     const token = await user.generateAuthToken()
-    res.send({ user, token, success: true })
+    res.send({ user: { name: user.name, email: user.email }, token, success: true })
   } catch (error) {
-    res.status(400).send(error)
+    res.status(400).send({ success: false, err: error.message })
   }
 })
 
-// TODO: Def don't return the password or tokens
 router.get('/users/me', auth, async (req, res) => {
   // View logged in user profile
-  res.send(req.user)
+  res.send({ name: req.user.name, email: req.user.email })
 })
 router.get('/logout', auth, async (req, res) => {
   // Log user out of the application
@@ -48,7 +46,7 @@ router.get('/logout', auth, async (req, res) => {
       msg: 'Logged out successfully.'
     })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send({ success: false, err: error.message })
   }
 })
 
@@ -62,7 +60,7 @@ router.get('/logoutall', auth, async (req, res) => {
       msg: 'Logged out successfully.'
     })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send({ success: false, err: error.message })
   }
 })
 
