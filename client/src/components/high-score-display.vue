@@ -57,12 +57,20 @@
                 <th class="text-left">
                   High Score
                 </th>
+                <th class="text-left">
+                  Rate
+                </th>
+                <th class="text-left">
+                  # of Moles
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in highScores" :key="index">
                 <td>{{ item.name }}</td>
                 <td>{{ item.score }}</td>
+                <td>{{ item.rate }}</td>
+                <td>{{ item.moles }}</td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -72,6 +80,9 @@
   </v-content>
 </template>
 <script>
+// TODO: Possibly add a 2nd highscore component that just has a slot and dialog.
+// Idea is to display the info on the page, but if we display AFTER a game, use the
+// dialog vs if they visit the highscore page
 export default {
   model: {
     prop: 'showDialog',
@@ -79,11 +90,12 @@ export default {
   },
   props: {
     showDialog: Boolean,
-    currentScore: Number
+    currentScore: Number,
+    highScores: Array,
+    newHighScore: Boolean // TODO: If it is a new highscore give them a congrats and a little extra love
   },
   data: () => ({
-    show: false,
-    highScores: [{ name: 'Sam', score: '12' }, { name: 'Sam', score: '10' }, { name: 'Sam', score: '8' }, { name: 'Sam', score: '6' }, { name: 'Sam', score: '4' }]
+    show: false
   }),
   watch: {
     showDialog () {
@@ -92,3 +104,11 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+// .hs {
+
+// }
+// .hs:hover {
+
+  // }
+</style>

@@ -56,6 +56,7 @@ export default {
   background-color: lightgray;
   border-radius: 50%;
   display: inline-block;
+  cursor: url('https://github.com/sfarrowbioiq/whack-a-mole-spf/blob/master/public/img/hammer.png'), default;
 }
 .active {
   background-color: black !important;

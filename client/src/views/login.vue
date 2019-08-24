@@ -38,7 +38,7 @@
           :disabled="!valid"
           color="success"
           class="mr-4"
-          @click="loginUser()"
+          @click="loginUser('in')"
         >
           Login
         </v-btn>
@@ -63,7 +63,7 @@
       />
       <v-text-field
         v-model="password"
-        :append-icon="showPass ? 'mdi-eye-off' : 'mdi-eye'"
+        :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
         :rules="[rules.required, rules.min]"
         :type="showPass ? 'text' : 'password'"
         label="Password"
@@ -72,7 +72,7 @@
       />
       <v-text-field
         v-model="confPassword"
-        :append-icon="showConfPass ? 'mdi-eye-off' : 'mdi-eye'"
+        :append-icon="showConfPass ? 'mdi-eye' : 'mdi-eye-off'"
         :rules="[rules.required, passwordConfirmationRule]"
         :type="showConfPass ? 'text' : 'password'"
         label="Confirm Password"
@@ -98,6 +98,8 @@
   </v-layout>
 </template>
 <script>
+import { APIService } from '../services/api-service.js'
+const apiService = new APIService()
 export const REGISTER = 'REGISTER'
 export const LOGIN = 'LOGIN'
 export default {
@@ -113,15 +115,26 @@ export default {
     email: '',
     password: '',
     confPassword: '',
+    errorMessage: '',
     rules: {
       required: value => !!value || 'Required field.',
       min: v => (v && v.length >= 8) || 'Min 8 characters',
       validEmail: v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
     },
     loginUser () {
-      // TODO: Log user in, then push to the game
-      this.$router.push('GAME')
-      console.log('login! ')
+      let payload = {
+        email: this.email,
+        password: this.password
+      }
+      apiService.loginUser(payload).then((resp) => {
+        if (resp.success) {
+          this.$store.dispatch('logInUser', resp.user)
+          this.$router.push('game')
+        } else {
+          console.Error('Success was false')
+          this.errorMessage = resp.err
+        }
+      })
     },
     switchMode (goToMode) {
       this.mode = goToMode
@@ -130,8 +143,19 @@ export default {
       this.$refs.form.reset()
     },
     createAccount () {
-      // TODO: API to create an account, then go back to the login screen.
-      console.log('Create Account')
+      let payload = {
+        email: this.email,
+        password: this.password,
+        name: this.name
+      }
+      apiService.createUser(payload).then((resp) => {
+        if (resp.success) {
+          this.switchMode(LOGIN)
+        } else {
+          console.Error('Success was false')
+          this.errorMessage = resp.err
+        }
+      })
     }
   }),
   computed: {

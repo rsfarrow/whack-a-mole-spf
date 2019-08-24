@@ -2,6 +2,7 @@
   <v-app>
     <v-app-bar app>
       <v-app-bar-nav-icon
+        v-if="loggedIn"
         @click="showNav = !showNav"
       />
       <v-toolbar-title class="headline text-uppercase">
@@ -14,6 +15,7 @@
       <!-- Navigation Drawer
            TODO: Make a component -->
       <v-navigation-drawer
+        v-if="loggedIn"
         v-model="showNav"
         app
       >
@@ -23,7 +25,7 @@
               Whack-A-Mole
             </v-list-item-title>
             <v-list-item-subtitle>
-              Some Text
+              {{ `${name} / ${email}` }}
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -65,6 +67,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { APIService } from '../services/api-service.js'
+const apiService = new APIService()
 
 export default {
   components: {
@@ -79,9 +84,18 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters(['loggedIn', 'name', 'email'])
+  },
   methods: {
     logout () {
-      console.log('Logout!')
+      apiService.logoutUser().then(() => {
+        console.log('logout')
+        this.$store.dispatch('logOutUser')
+        console.log('dispatched')
+        this.$router.push('login')
+        console.log('login')
+      })
     }
   }
 }

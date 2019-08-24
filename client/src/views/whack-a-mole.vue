@@ -1,89 +1,90 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-    fill-height
-    class="mx-3 "
-  >
-    <h1>Score: {{ score }}</h1>
-    <h1>Timer: {{ timer }}</h1>
-    <v-btn
-      :disabled="disableButton"
-      @click="startGame()"
-    >
-      Start Game
-    </v-btn>
-    <mole
-      v-for="(mole, index) in moles"
-      ref="mole"
-      :key="mole"
-      :rate="rateArray[rateIndex]"
-      :numOfMoles="moles"
-      :index="index"
-      :offset="offset[index]"
-      @active="score++"
-    />
-    <!-- Rate Change -->
-    <div class="mt-3">
-      Change Mole Speed:
-    </div>
-    <v-layout align-center
-              justify-center
-              row
-    >
-      <v-btn
-        :disabled="disableButton"
-        text
-        @click="prev"
+  <div>
+    <v-container>
+      <v-row
+        :justify="'space-around'"
       >
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <v-item-group
-        v-model="rateIndex"
-        class="text-center"
-        dense
-        mandatory
+        <scoreboard
+          :numberDisplay="(timer.toString().padStart(2, '0'))"
+          :title="'Timer'"
+          class="mx-3 my-3"
+        />
+        <scoreboard
+          :numberDisplay="(score.toString().padStart(2, '0'))"
+          :title="'Score'"
+          class="mx-3 my-3"
+        />
+      </v-row>
+      <v-row
+        :justify="'center'"
       >
-        <v-item
-          v-for="n in rateArray"
-          :key="`btn-${n}`"
-          v-slot:default="{ active, toggle }"
+        <v-btn
+          :disabled="disableButton"
+          @click="startGame()"
         >
-          <v-btn
-            :input-value="active"
-            :disabled="disableButton"
-            icon
-            @click="toggle"
-          >
-            {{ n }}
-          </v-btn>
-        </v-item>
-      </v-item-group>
-      <v-btn
-        :disabled="disableButton"
-        text
-        @click="next"
+          Start Game
+        </v-btn>
+      </v-row>
+      <v-row
+        :align-content="'center'"
       >
-        <v-icon>mdi-chevron-right</v-icon>
+        <v-col v-for="(mole, index) in moles"
+               :key="index"
+        >
+          <mole
+            ref="mole"
+            :key="mole"
+            :rate="rate"
+            :numOfMoles="moles"
+            :index="index"
+            :offset="offset[index]"
+            @active="score++"
+          />
+        </v-col>
+        <v-row />
+        <settings
+          v-model="showSettings"
+          :rate="rate"
+          :moles="moles"
+          @updateSettings="rate=$event.rate; moles=$event.moles;setUpOffset()"
+        />
+        <high-scores
+          v-model="showDialog"
+          :currentScore="score"
+          :highScores="highScores"
+        />
+      </v-row>
+    </v-container>
+    <v-footer class="ml-auto mt-auto"
+              align-end
+              :color="'transparent'"
+    >
+      <v-spacer />
+      <v-btn
+        :input-value="false"
+        icon
+        text
+        small
+        @click="disableButton ? '' : showSettings = true"
+      >
+        <v-icon> mdi-settings </v-icon>
       </v-btn>
-    </v-layout>
-
-    <high-scores
-      v-model="showDialog"
-      :currentScore="score"
-    />
-  </v-layout>
+    </v-footer>
+  </div>
 </template>
 <script>
 import Mole from '../components/mole.vue'
-import HighScores from '../components/high-scores.vue'
-const GAME_LENGTH = 30
+import Scoreboard from '../components/scoreboard.vue'
+import HighScores from '../components/high-score-display.vue'
+import Settings from './settings.vue'
+const GAME_LENGTH = 15
 export default {
   name: 'whack-a-mole',
   components: {
     Mole,
-    HighScores
+    HighScores,
+    Scoreboard,
+    Settings
   },
   data: () => ({
     moles: 3,
@@ -91,10 +92,11 @@ export default {
     offset: [],
     timer: 0,
     length: 5,
-    rateIndex: 0,
-    rateArray: [1, 2, 3, 5, 7],
     timeout: '',
-    showDialog: false
+    rate: 1,
+    showDialog: false,
+    showSettings: false,
+    highScores: [{ name: 'Sam', score: '12', rate: '2', moles: '3' }, { name: 'Sam', score: '10', rate: '2', moles: '3' }, { name: 'Sam', score: '8', rate: '2', moles: '3' }, { name: 'Sam', score: '6', rate: '2', moles: '3' }, { name: 'Sam', score: '4', rate: '2', moles: '3' }]
   }),
   computed: {
     disableButton () {
@@ -132,16 +134,6 @@ export default {
       for (let i = 0; i < this.moles; i++) {
         this.offset.push(Math.floor(Math.random() * 250))
       }
-    },
-    next () {
-      this.rateIndex = this.rateIndex + 1 === this.rateArray.length
-        ? 0
-        : this.rateIndex + 1
-    },
-    prev () {
-      this.rateIndex = this.rateIndex - 1 < 0
-        ? this.rateArray.length - 1
-        : this.rateIndex - 1
     }
   }
 }
