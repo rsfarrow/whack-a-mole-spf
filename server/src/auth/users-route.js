@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).send({ error: 'Login failed! Check authentication credentials' })
     }
     const token = await user.generateAuthToken()
-    res.send({ user, token })
+    res.send({ user, token, success: true })
   } catch (error) {
     res.status(400).send(error)
   }
@@ -43,7 +43,10 @@ router.get('/logout', auth, async (req, res) => {
       return token.token !== req.token
     })
     await req.user.save()
-    res.send()
+    res.send({
+      success: true,
+      msg: 'Logged out successfully.'
+    })
   } catch (error) {
     res.status(500).send(error)
   }
@@ -54,7 +57,10 @@ router.get('/logoutall', auth, async (req, res) => {
   try {
     req.user.tokens.splice(0, req.user.tokens.length)
     await req.user.save()
-    res.send()
+    res.send({
+      success: true,
+      msg: 'Logged out successfully.'
+    })
   } catch (error) {
     res.status(500).send(error)
   }
