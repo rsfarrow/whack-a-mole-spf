@@ -34,7 +34,10 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true
     }
-  }]
+  }],
+  highscore: {
+    type: Number
+  }
 })
 userSchema.pre('save', async function (next) {
   // Hash the password before saving the user model
