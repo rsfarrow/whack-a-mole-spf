@@ -40,6 +40,7 @@
             v-for="item in items"
             :key="item.title"
             link
+            @click="nav(item.title)"
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
@@ -70,7 +71,9 @@
 import { mapGetters } from 'vuex'
 import { APIService } from '../services/api-service.js'
 const apiService = new APIService()
-
+const WAM_TITLE = 'Whack-A-Mole'
+const HIGHSCORE_TITLE = 'High Scores'
+// const ABOUT_TITLE = 'ABOUT'
 export default {
   components: {
   },
@@ -78,9 +81,9 @@ export default {
     return {
       showNav: false,
       items: [
-        { title: 'Whack-A-Mole', icon: 'mdi-gamepad-square' },
-        { title: 'High Scores', icon: 'mdi-counter' },
-        { title: 'About', icon: 'mdi-information' }
+        { title: WAM_TITLE, icon: 'mdi-gamepad-square' },
+        { title: HIGHSCORE_TITLE, icon: 'mdi-counter' }
+        // { title: 'About', icon: 'mdi-information' }
       ]
     }
   },
@@ -94,6 +97,13 @@ export default {
         this.$vuetify.theme.dark = this.darkMode
         this.$router.push('login')
       })
+    },
+    nav (item) {
+      if (item === WAM_TITLE) {
+        this.$router.push('game')
+      } else if (item === HIGHSCORE_TITLE) {
+        this.$router.push('highscores')
+      }
     }
   }
 }
