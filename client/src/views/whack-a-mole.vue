@@ -31,6 +31,7 @@
       >
         <v-col v-for="(mole, index) in moles"
                :key="index"
+               :align-self="'center'"
         >
           <mole
             ref="mole"
@@ -48,12 +49,15 @@
         :rate="rate"
         :moles="moles"
         :customCursor="customCursor"
-        @updateSettings="rate=$event.rate; moles=$event.moles;customCursor = $event.customCursor;setUpOffset()"
+        :darkMode="darkMode"
+        @updateSettings="updateSettings($event)"
       />
       <high-scores
+        ref="highscoreDialog"
         v-model="showDialog"
         :currentScore="score"
         :highScores="highScores"
+        :newHighScore="newHighScore"
       />
     </v-container>
     <v-footer class="ml-auto mt-auto"
@@ -78,6 +82,9 @@ import Mole from '../components/mole.vue'
 import Scoreboard from '../components/scoreboard.vue'
 import HighScores from '../components/high-score-display.vue'
 import Settings from './settings.vue'
+import { APIService } from '../services/api-service.js'
+import { mapGetters } from 'vuex'
+const apiService = new APIService()
 const GAME_LENGTH = 15
 export default {
   name: 'whack-a-mole',
@@ -97,12 +104,21 @@ export default {
     rate: 1,
     showDialog: false,
     showSettings: false,
-    customCursor: true,
-    highScores: [{ name: 'Sam', score: '12', rate: '2', moles: '3' }, { name: 'Sam', score: '10', rate: '2', moles: '3' }, { name: 'Sam', score: '8', rate: '2', moles: '3' }, { name: 'Sam', score: '6', rate: '2', moles: '3' }, { name: 'Sam', score: '4', rate: '2', moles: '3' }]
+    highScores: [],
+    userHighscore: 0,
+    newHighScore: false
   }),
   computed: {
     disableButton () {
       return this.timer > 0
+    },
+    ...mapGetters(['name', 'darkMode', 'customCursor'])
+  },
+  watch: {
+    showDialog () {
+      if (!this.showDialog) {
+        this.$confetti.stop()
+      }
     }
   },
   mounted () {
@@ -122,12 +138,12 @@ export default {
       this.timeout = setInterval(() => {
         this.timer--
         if (this.timer === 0) {
-          this.showDialog = true
           clearTimeout(this.timeout)
           this.timeout = ''
           this.$refs.mole.forEach((mole) => {
             mole.stopTime()
           })
+          this.setHighscore()
         }
       }, 1000)
     },
@@ -136,6 +152,29 @@ export default {
       for (let i = 0; i < this.moles; i++) {
         this.offset.push(Math.floor(Math.random() * 250))
       }
+    },
+    setHighscore () {
+      let payload = {
+        name: this.name,
+        score: this.score,
+        rate: this.rate,
+        numOfMoles: this.moles
+      }
+      apiService.sendHighscores(payload).then((resp) => {
+        this.highScores = resp.scores
+        this.newHighScore = resp.user.newUserHighscore
+        this.$refs.highscoreDialog.setUserHighscore(resp.user.newUserHighscore, resp.user.highScore, this.score)
+        this.showDialog = true
+        // this.$refs.highscoreDialog.setUserHighscore(true, 15, 15) // testing highscore
+      })
+    },
+    updateSettings (event) {
+      this.rate = event.rate
+      this.moles = event.moles
+      event.customCursor ? this.$store.dispatch('turnOnCustomCursor') : this.$store.dispatch('turnOffCustomCursor')
+      event.darkMode ? this.$store.dispatch('turnOnDarkMode') : this.$store.dispatch('turnOffDarkMode')
+      this.$vuetify.theme.dark = this.darkMode
+      this.setUpOffset()
     }
   }
 }

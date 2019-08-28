@@ -3,11 +3,12 @@
     <v-dialog
       v-model="show"
       persistent
+      :max-width=" $vuetify.breakpoint.smAndUp ? '50%' : ''"
     >
       <v-card>
         <v-card-title>
           <div class="headline text-uppercase">
-            GAME OVER
+            {{ newHighScore ? 'New High score!' : 'GAME OVER' }}
           </div>
           <v-spacer />
           <v-icon
@@ -22,7 +23,7 @@
           </div>
           <v-divider />
           <div class="title">
-            Your high score
+            {{ newHighScore ? 'Your highest score!' : 'Your high scores' }}
           </div>
           <v-simple-table>
             <thead>
@@ -36,7 +37,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in [{name: 'Sam', score: '5'}, {name: 'Sam', score: currentScore}]"
+              <tr v-for="(item, index) in userHighscores"
                   :key="index"
                   class="hs"
               >
@@ -70,7 +71,7 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.score }}</td>
                 <td>{{ item.rate }}</td>
-                <td>{{ item.moles }}</td>
+                <td>{{ item.numOfMoles }}</td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -83,6 +84,7 @@
 // TODO: Possibly add a 2nd highscore component that just has a slot and dialog.
 // Idea is to display the info on the page, but if we display AFTER a game, use the
 // dialog vs if they visit the highscore page
+import { mapGetters } from 'vuex'
 export default {
   model: {
     prop: 'showDialog',
@@ -92,14 +94,31 @@ export default {
     showDialog: Boolean,
     currentScore: Number,
     highScores: Array,
-    newHighScore: Boolean // TODO: If it is a new highscore give them a congrats and a little extra love
+    newHighScore: Boolean
   },
   data: () => ({
-    show: false
+    show: false,
+    userHighscores: []
   }),
+  computed: {
+    ...mapGetters(['name'])
+  },
   watch: {
     showDialog () {
       this.show = this.showDialog
+    }
+  },
+  methods: {
+    setUserHighscore (newHighScore, userHighscore, currentScore) {
+      if (newHighScore) {
+        this.$confetti.start({ })
+        this.userHighscores = [{ name: this.name, score: userHighscore }]
+      } else {
+        this.userHighscores = [
+          { name: this.name, score: userHighscore },
+          { name: this.name, score: currentScore }
+        ]
+      }
     }
   }
 }

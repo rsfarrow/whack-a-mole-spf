@@ -101,6 +101,10 @@
             Custom Cursor:
           </div>
           <v-switch v-model="internalCustomCursor" />
+          <div class="mt-3">
+            Dark Mode:
+          </div>
+          <v-switch v-model="internalDarkMode" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -114,7 +118,7 @@
           <v-btn
             text
             color="primary"
-            @click="$emit('click:outside', false);$emit('updateSettings', {rate: rateArray[rateIndex], moles: moleArray[moleIndex], customCursor: internalCustomCursor})"
+            @click="updateSettings()"
           >
             Save
           </v-btn>
@@ -136,7 +140,8 @@ export default {
     showDialog: Boolean,
     rate: Number,
     moles: Number,
-    customCursor: Boolean
+    customCursor: Boolean,
+    darkMode: Boolean
   },
   data: () => ({
     show: false,
@@ -144,7 +149,8 @@ export default {
     rateArray: [1, 2, 3, 5, 7],
     moleIndex: 0,
     moleArray: [3, 5, 7],
-    internalCustomCursor: false
+    internalCustomCursor: false,
+    internalDarkMode: false
   }),
   watch: {
     showDialog () {
@@ -152,24 +158,36 @@ export default {
     },
     customCursor () {
       this.internalCustomCursor = this.customCursor
+    },
+    darkMode () {
+      this.internalDarkMode = this.darkMode
     }
   },
   mounted () {
     this.rateIndex = this.rateArray.findIndex((el) => { return el === this.rate })
     this.moleIndex = this.moleArray.findIndex((el) => { return el === this.moles })
+    this.internalCustomCursor = this.customCursor
+    this.internalDarkMode = this.darkMode
   },
   methods: {
     next (index, array) {
       let newIndex = index + 1 === array.length
         ? 0
         : index + 1
-      console.log('newIndex : ', newIndex)
       return newIndex
     },
     prev (index, array) {
       return index - 1 < 0
         ? array.length - 1
         : index - 1
+    },
+    updateSettings () {
+      this.$emit('updateSettings', {
+        rate: this.rateArray[this.rateIndex],
+        moles: this.moleArray[this.moleIndex],
+        customCursor: this.internalCustomCursor,
+        darkMode: this.internalDarkMode })
+      this.$emit('click:outside', false)
     }
   }
 }

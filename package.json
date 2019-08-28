@@ -28,6 +28,7 @@
     "path": "^0.12.7",
     "validator": "^11.1.0",
     "vue": "^2.6.10",
+    "vue-confetti": "^2.0.1",
     "vue-router": "^3.0.3",
     "vuetify": "^2.0.0",
     "vuex": "^3.1.1",

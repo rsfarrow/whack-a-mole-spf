@@ -10,12 +10,19 @@ export default new Vuex.Store({
   state: {
 
     loggedIn: false,
-    user: {}
+    user: {},
+    // Default settings
+    settings: {
+      darkMode: false,
+      customCursor: true
+    }
   },
   getters: {
     name: state => state.user.name,
     email: state => state.user.email,
-    loggedIn: state => state.loggedIn
+    loggedIn: state => state.loggedIn,
+    darkMode: state => state.settings.darkMode,
+    customCursor: state => state.settings.customCursor
   },
   mutations: {
     updateLoggedIn (state, loggedIn) {
@@ -26,6 +33,12 @@ export default new Vuex.Store({
     },
     clearUser (state) {
       state.user = {}
+    },
+    updateDarkMode (state, dark) {
+      state.settings.darkMode = dark
+    },
+    updateCustomCursor (state, custom) {
+      state.settings.customCursor = custom
     }
   },
   actions: {
@@ -36,7 +49,20 @@ export default new Vuex.Store({
     logOutUser ({ commit }) {
       commit('updateLoggedIn', false)
       commit('clearUser')
+    },
+    turnOnDarkMode ({ commit }) {
+      commit('updateDarkMode', true)
+      console.log(this.$vuetify)
+    },
+    turnOffDarkMode ({ commit }) {
+      commit('updateDarkMode', false)
+      console.log(this.$vuetify)
+    },
+    turnOnCustomCursor ({ commit }) {
+      commit('updateCustomCursor', true)
+    },
+    turnOffCustomCursor ({ commit }) {
+      commit('updateCustomCursor', false)
     }
-
   }
 })

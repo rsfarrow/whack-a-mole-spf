@@ -1,5 +1,4 @@
 import axios from 'axios'
-// const API_URI = 'localhost:4000/'
 const API_URI = 'https://whack-a-mole-spf.herokuapp.com/'
 const CREATE_USER = 'user'
 const LOGIN = 'login'

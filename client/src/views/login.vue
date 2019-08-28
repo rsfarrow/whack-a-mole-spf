@@ -25,6 +25,7 @@
         :type="showPass ? 'text' : 'password'"
         label="Password"
         @click:append="showPass = !showPass"
+        @keyup.enter="loginUser()"
       />
       <div class="mt-3">
         <v-btn
@@ -38,7 +39,7 @@
           :disabled="!valid"
           color="success"
           class="mr-4"
-          @click="loginUser('in')"
+          @click="loginUser()"
         >
           Login
         </v-btn>
@@ -90,6 +91,7 @@
           :disabled="!valid"
           color="success"
           @click="createAccount()"
+          @keyup.enter="createAccount()"
         >
           Create Account
         </v-btn>

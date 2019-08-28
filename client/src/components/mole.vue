@@ -1,15 +1,17 @@
 <template>
   <span
-    :class="['dot', {active: active}]"
+    :class="['moles', {active: active}]"
     @click="emitActive()"
   >
     <v-img
       v-if="!active"
       :src="bush"
+      :aspect-ratio="1"
     />
     <v-img
       v-else
       :src="moleFace"
+      :aspect-ratio="1"
     />
   </span>
 </template>
@@ -67,18 +69,8 @@ export default {
 
 <style scoped style="scss">
 
-.dot {
-  margin: 35px;
-  height: 25px;
-  width: 25px;
-  /* background-color: lightgray; */
-  border-radius: 50%;
-  display: inline-block;
-}
-.active {
-  /* background-color: black !important; */
-}
-.full-height {
-  height: 100%;
+.moles {
+  height: 50px;
+  width: 50px;
 }
 </style>
