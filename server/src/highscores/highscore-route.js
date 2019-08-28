@@ -11,15 +11,27 @@ router.get('/highscores', auth, async (req, res) => {
 
 // Send in a score and return the highscores
 router.post('/highscores', auth, async (req, res) => {
-  const success = await highscoreDb.addNewScore(req.body)
+  let scores = await highscoreDb.getTopScores()
+  let success = {}
+  let newHighscore = false
+  let userHighscore = false
+  if (req.body.score > scores[4].score) {
+    success = await highscoreDb.addNewScore(req.body) // go ahead and throw it in there before we mark new hs
+    // There is a new highscore
+    newHighscore = true
+    req.body.newHighscore = true
+    scores.push(req.body)
+    scores.sort((a, b) => {
+      return b.score - a.score
+    })
+    scores.splice(5, 1)
+  }
   if (success.message) {
     res.status(200).send(success.message)
   } else {
-    let newHighscore = false
-    const scores = await highscoreDb.getTopScores()
     if (req.user.highscore) {
       if (req.body.score > req.user.highscore) {
-        newHighscore = true
+        userHighscore = true
         req.user.highscore = req.body.score
         req.user.save()
       }
@@ -27,7 +39,7 @@ router.post('/highscores', auth, async (req, res) => {
       req.user.highscore = req.body.score
       req.user.save()
     }
-    res.status(200).send({ user: { highScore: req.user.highscore, newUserHighscore: newHighscore }, scores })
+    res.status(200).send({ user: { highScore: req.user.highscore, newUserHighscore: userHighscore }, newHighscore, scores })
   }
 })
 

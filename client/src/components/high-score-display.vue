@@ -7,8 +7,8 @@
     >
       <v-card>
         <v-card-title>
-          <div class="headline text-uppercase">
-            {{ newHighScore ? 'New High score!' : 'GAME OVER' }}
+          <div :class="['headline', 'text-uppercase', {'smaller-text':$vuetify.breakpoint.xsOnly}]">
+            {{ header }}
           </div>
           <v-spacer />
           <v-icon
@@ -38,8 +38,7 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in userHighscores"
-                  :key="index"
-                  class="hs"
+                  :key="'user-hs-' + index"
               >
                 <td>{{ item.name }}</td>
                 <td>{{ item.score }}</td>
@@ -67,7 +66,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in highScores" :key="index">
+              <tr
+                v-for="(item, index) in highScores"
+                :key="'hs-' + index"
+                :class="{'accent': item.newHighscore}"
+              >
                 <td>{{ item.name }}</td>
                 <td>{{ item.score }}</td>
                 <td>{{ item.rate }}</td>
@@ -94,13 +97,23 @@ export default {
     showDialog: Boolean,
     currentScore: Number,
     highScores: Array,
-    newHighScore: Boolean
+    newHighScore: Boolean,
+    newUserHighScore: Boolean
   },
   data: () => ({
     show: false,
     userHighscores: []
   }),
   computed: {
+    header () {
+      if (this.newHighScore) {
+        return '🎉🎊 New High score! 🎊🎉'
+      } else if (this.newUserHighScore) {
+        return 'A personal best! 🎉'
+      } else {
+        return 'GAME OVER'
+      }
+    },
     ...mapGetters(['name'])
   },
   watch: {
@@ -111,7 +124,6 @@ export default {
   methods: {
     setUserHighscore (newHighScore, userHighscore, currentScore) {
       if (newHighScore) {
-        this.$confetti.start({ })
         this.userHighscores = [{ name: this.name, score: userHighscore }]
       } else {
         this.userHighscores = [
@@ -124,10 +136,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-// .hs {
-
-// }
-// .hs:hover {
-
-  // }
+.smaller-text {
+  font-size: 1.3 rem;
+}
 </style>

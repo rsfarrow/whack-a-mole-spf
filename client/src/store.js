@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
-
+const defaultSettings = {
+  darkMode: false,
+  customCursor: true
+}
 export default new Vuex.Store({
   plugins: [createPersistedState({
     storage: window.localStorage
@@ -12,10 +15,7 @@ export default new Vuex.Store({
     loggedIn: false,
     user: {},
     // Default settings
-    settings: {
-      darkMode: false,
-      customCursor: true
-    }
+    settings: defaultSettings
   },
   getters: {
     name: state => state.user.name,
@@ -39,6 +39,9 @@ export default new Vuex.Store({
     },
     updateCustomCursor (state, custom) {
       state.settings.customCursor = custom
+    },
+    resetSettings (state) {
+      state.settings = defaultSettings
     }
   },
   actions: {
@@ -49,14 +52,13 @@ export default new Vuex.Store({
     logOutUser ({ commit }) {
       commit('updateLoggedIn', false)
       commit('clearUser')
+      commit('resetSettings')
     },
     turnOnDarkMode ({ commit }) {
       commit('updateDarkMode', true)
-      console.log(this.$vuetify)
     },
     turnOffDarkMode ({ commit }) {
       commit('updateDarkMode', false)
-      console.log(this.$vuetify)
     },
     turnOnCustomCursor ({ commit }) {
       commit('updateCustomCursor', true)

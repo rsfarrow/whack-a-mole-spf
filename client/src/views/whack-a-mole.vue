@@ -58,6 +58,7 @@
         :currentScore="score"
         :highScores="highScores"
         :newHighScore="newHighScore"
+        :newUserHighScore="newUserHighScore"
       />
     </v-container>
     <v-footer class="ml-auto mt-auto"
@@ -78,14 +79,17 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import Mole from '../components/mole.vue'
 import Scoreboard from '../components/scoreboard.vue'
 import HighScores from '../components/high-score-display.vue'
 import Settings from './settings.vue'
 import { APIService } from '../services/api-service.js'
 import { mapGetters } from 'vuex'
+import VueConfetti from 'vue-confetti'
 const apiService = new APIService()
 const GAME_LENGTH = 15
+Vue.use(VueConfetti)
 export default {
   name: 'whack-a-mole',
   components: {
@@ -106,7 +110,8 @@ export default {
     showSettings: false,
     highScores: [],
     userHighscore: 0,
-    newHighScore: false
+    newHighScore: false,
+    newUserHighScore: false
   }),
   computed: {
     disableButton () {
@@ -162,10 +167,13 @@ export default {
       }
       apiService.sendHighscores(payload).then((resp) => {
         this.highScores = resp.scores
-        this.newHighScore = resp.user.newUserHighscore
-        this.$refs.highscoreDialog.setUserHighscore(resp.user.newUserHighscore, resp.user.highScore, this.score)
+        this.newUserHighScore = resp.user.newUserHighscore
+        this.newHighScore = resp.newHighscore
+        this.$refs.highscoreDialog.setUserHighscore(this.newUserHighScore, resp.user.highScore, this.score)
         this.showDialog = true
-        // this.$refs.highscoreDialog.setUserHighscore(true, 15, 15) // testing highscore
+        if (this.newHighScore) {
+          this.$confetti.start({ })
+        }
       })
     },
     updateSettings (event) {

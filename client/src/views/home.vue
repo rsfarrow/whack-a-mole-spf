@@ -85,16 +85,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['loggedIn', 'name', 'email'])
+    ...mapGetters(['loggedIn', 'name', 'email', 'darkMode'])
   },
   methods: {
     logout () {
       apiService.logoutUser().then(() => {
-        console.log('logout')
         this.$store.dispatch('logOutUser')
-        console.log('dispatched')
+        this.$vuetify.theme.dark = this.darkMode
         this.$router.push('login')
-        console.log('login')
       })
     }
   }
