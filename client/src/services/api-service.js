@@ -11,7 +11,7 @@ const PROFILE = 'users/me'
 export class APIService {
   async createUser (payload) {
     const url = `${API_URI}${CREATE_USER}`
-    return axios.post(url, payload)
+    return this.sendAxios(url, 'POST', payload)
   }
 
   async loginUser (payload) {

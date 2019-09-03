@@ -11,7 +11,7 @@ router.post('/user', async (req, res) => {
     await user.save()
     res.status(201).send({ success: true })
   } catch (error) {
-    res.status(400).send({ success: false, err: error.message })
+    res.status(200).send({ success: false, err: error.message })
   }
 })
 
@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
     const token = await user.generateAuthToken()
     res.send({ user: { name: user.name, email: user.email }, token, success: true })
   } catch (error) {
-    res.status(400).send({ success: false, err: error.message })
+    res.status(200).send({ success: false, err: error.message })
   }
 })
 
@@ -46,7 +46,7 @@ router.get('/logout', auth, async (req, res) => {
       msg: 'Logged out successfully.'
     })
   } catch (error) {
-    res.status(500).send({ success: false, err: error.message })
+    res.status(200).send({ success: false, err: error.message })
   }
 })
 
@@ -60,7 +60,7 @@ router.get('/logoutall', auth, async (req, res) => {
       msg: 'Logged out successfully.'
     })
   } catch (error) {
-    res.status(500).send({ success: false, err: error.message })
+    res.status(200).send({ success: false, err: error.message })
   }
 })
 

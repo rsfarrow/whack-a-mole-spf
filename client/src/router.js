@@ -19,7 +19,7 @@ export default new Router({
   routes: [
     { path: '*',
       beforeEnter: (to, from, next) => {
-        next({ name: HOME_NAME })
+        store.getters.loggedIn ? next({ name: GAME_NAME }) : next({ name: HOME_NAME })
       }
     },
     {
