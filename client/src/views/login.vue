@@ -146,12 +146,13 @@ export default {
         password: this.password
       }
       apiService.loginUser(payload).then((resp) => {
+        this.error = !resp.success
         if (resp.success) {
           this.$store.dispatch('logInUser', resp.user)
           this.$router.push('game')
         } else {
-          console.Error('Success was false')
           this.snackMessage = resp.err
+          this.snackbar = true
         }
       })
     },
