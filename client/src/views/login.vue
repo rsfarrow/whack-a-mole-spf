@@ -78,6 +78,7 @@
         :type="showConfPass ? 'text' : 'password'"
         label="Confirm Password"
         @click:append="showConfPass = !showConfPass"
+        @keyup.enter="createAccount()"
       />
       <div class="mt-3">
         <v-btn
@@ -91,12 +92,25 @@
           :disabled="!valid"
           color="success"
           @click="createAccount()"
-          @keyup.enter="createAccount()"
         >
           Create Account
         </v-btn>
       </div>
     </v-form>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      bottom
+      :color="error ? 'error' : 'primary'"
+    >
+      {{ snackMessage }}
+      <v-btn
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-layout>
 </template>
 <script>
@@ -113,11 +127,14 @@ export default {
     valid: false,
     showPass: false,
     showConfPass: false,
+    snackbar: false,
+    timeout: 5000,
     name: '',
     email: '',
     password: '',
     confPassword: '',
-    errorMessage: '',
+    snackMessage: '',
+    error: false,
     rules: {
       required: value => !!value || 'Required field.',
       min: v => (v && v.length >= 8) || 'Min 8 characters',
@@ -134,7 +151,7 @@ export default {
           this.$router.push('game')
         } else {
           console.Error('Success was false')
-          this.errorMessage = resp.err
+          this.snackMessage = resp.err
         }
       })
     },
@@ -151,11 +168,14 @@ export default {
         name: this.name
       }
       apiService.createUser(payload).then((resp) => {
+        this.error = !resp.success
         if (resp.success) {
+          this.snackMessage = 'Account created'
+          this.snackbar = true
           this.switchMode(LOGIN)
         } else {
-          console.Error('Success was false')
-          this.errorMessage = resp.err
+          this.snackMessage = resp.err
+          this.snackbar = true
         }
       })
     }
