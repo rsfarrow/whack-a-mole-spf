@@ -75,6 +75,7 @@ const WAM_TITLE = 'Whack-A-Mole'
 const HIGHSCORE_TITLE = 'High Scores'
 // const ABOUT_TITLE = 'ABOUT'
 export default {
+  name: 'home',
   components: {
   },
   data () {

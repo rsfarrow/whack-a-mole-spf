@@ -132,6 +132,7 @@
 // Idea is to display the info on the page, but if we display AFTER a game, use the
 // dialog vs if they visit the highscore page
 export default {
+  name: 'settings',
   model: {
     prop: 'showDialog',
     event: 'click:outside'

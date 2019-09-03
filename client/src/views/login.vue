@@ -119,6 +119,7 @@ const apiService = new APIService()
 export const REGISTER = 'REGISTER'
 export const LOGIN = 'LOGIN'
 export default {
+  name: 'login-page',
   data: () => ({
     // TODO: Convert literals to labels - i18n
     LOGIN,

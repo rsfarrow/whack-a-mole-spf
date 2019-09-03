@@ -45,6 +45,7 @@
 import { APIService } from '../services/api-service.js'
 const apiService = new APIService()
 export default {
+  name: 'highscores',
   data: () => ({
     highscores: []
   }),

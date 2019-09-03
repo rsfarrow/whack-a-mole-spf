@@ -137,6 +137,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .smaller-text {
-  font-size: 1.3 rem;
+  font-size: 1.3rem !important;
 }
 </style>
