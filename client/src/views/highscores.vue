@@ -28,12 +28,20 @@
             <tr
               v-for="(item, index) in highscores"
               :key="'hs-' + index"
-              :class="{'accent': item.newHighscore}"
+              :class="[{'accent': item.newHighscore}, 'table-row']"
             >
-              <td>{{ item.name }}</td>
-              <td>{{ item.score }}</td>
-              <td>{{ item.rate }}</td>
-              <td>{{ item.numOfMoles }}</td>
+              <td :id="'hs-data-name-' + index">
+                {{ item.name }}
+              </td>
+              <td :id="'hs-data-score-' + index">
+                {{ item.score }}
+              </td>
+              <td :id="'hs-data-rate-' + index">
+                {{ item.rate }}
+              </td>
+              <td :id="'hs-data-mole-' + index">
+                {{ item.numOfMoles }}
+              </td>
             </tr>
           </tbody>
         </v-simple-table>

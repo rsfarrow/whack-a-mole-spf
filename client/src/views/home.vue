@@ -1,8 +1,9 @@
 <template>
-  <v-app>
+  <v-app class="wam-app">
     <v-app-bar app>
       <v-app-bar-nav-icon
         v-if="loggedIn"
+        id="nav-icon"
         @click="showNav = !showNav"
       />
       <v-toolbar-title class="headline text-uppercase">
@@ -37,7 +38,8 @@
           nav
         >
           <v-list-item
-            v-for="item in items"
+            v-for="(item, index) in items"
+            :id="'nav-item-' + index"
             :key="item.title"
             link
             @click="nav(item.title)"
@@ -54,6 +56,7 @@
         <template v-slot:append>
           <div class="pa-2">
             <v-btn
+              id="logout-btn"
               block
               @click="logout()"
             >

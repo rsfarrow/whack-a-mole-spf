@@ -29,6 +29,7 @@
       />
       <div class="mt-3">
         <v-btn
+          id="go-create-account-btn"
           color="secondary"
           class="mr-4"
           @click="switchMode(REGISTER)"
@@ -36,6 +37,7 @@
           Create Account
         </v-btn>
         <v-btn
+          id="login-btn"
           :disabled="!valid"
           color="success"
           class="mr-4"
@@ -82,6 +84,7 @@
       />
       <div class="mt-3">
         <v-btn
+          id="go-back-btn"
           color="secondary"
           class="mr-4"
           @click="switchMode(LOGIN)"
@@ -89,6 +92,7 @@
           Go Back
         </v-btn>
         <v-btn
+          id="create-account-btn"
           :disabled="!valid"
           color="success"
           @click="createAccount()"
@@ -117,6 +121,7 @@
     >
       <v-spacer />
       <v-btn
+        id="about-page-btn"
         :input-value="false"
         icon
         text
@@ -144,7 +149,7 @@ export default {
     showPass: false,
     showConfPass: false,
     snackbar: false,
-    timeout: 5000,
+    timeout: 15000,
     name: '',
     email: '',
     password: '',

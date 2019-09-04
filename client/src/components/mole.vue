@@ -5,11 +5,13 @@
   >
     <v-img
       v-if="!active"
+      id="bush"
       :src="bush"
       :aspect-ratio="1"
     />
     <v-img
       v-else
+      id="mole"
       :src="moleFace"
       :aspect-ratio="1"
     />

@@ -32,11 +32,12 @@
               mandatory
             >
               <v-item
-                v-for="n in rateArray"
+                v-for="(n, index) in rateArray"
                 :key="`btn-${n}`"
                 v-slot:default="{ active, toggle }"
               >
                 <v-btn
+                  :id="'rate-btn-'+index"
                   :input-value="active"
                   :x-small="$vuetify.breakpoint.xsOnly"
                   icon
@@ -75,11 +76,12 @@
               mandatory
             >
               <v-item
-                v-for="m in moleArray"
+                v-for="(m, index) in moleArray"
                 :key="`btn-${m}`"
                 v-slot:default="{ active, toggle }"
               >
                 <v-btn
+                  :id="'mole-btn-'+index"
                   :input-value="active"
                   :x-small="$vuetify.breakpoint.xsOnly"
                   icon
@@ -100,15 +102,16 @@
           <div class="mt-3">
             Custom Cursor:
           </div>
-          <v-switch v-model="internalCustomCursor" />
+          <v-switch v-model="internalCustomCursor" class="cursor" />
           <div class="mt-3">
             Dark Mode:
           </div>
-          <v-switch v-model="internalDarkMode" />
+          <v-switch v-model="internalDarkMode" class="dark-mode" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn
+            id="settings-cancel"
             text
             :color="darkMode ? 'acent' : 'secondary'"
             @click="$emit('click:outside', false)"
@@ -116,6 +119,7 @@
             Cancel
           </v-btn>
           <v-btn
+            id="settings-save"
             text
             color="primary"
             @click="updateSettings()"

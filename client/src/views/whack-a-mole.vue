@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="wam-game">
     <v-container>
       <v-row
         :justify="'space-around'"
@@ -19,6 +19,7 @@
         :justify="'center'"
       >
         <v-btn
+          id="start-btn"
           :disabled="disableButton"
           @click="startGame()"
         >
@@ -67,8 +68,10 @@
     >
       <v-spacer />
       <v-btn
+        id="settings-btn"
         :input-value="false"
         icon
+        :disabled="disableButton"
         text
         small
         @click="disableButton ? '' : showSettings = true"

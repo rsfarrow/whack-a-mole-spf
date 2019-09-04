@@ -1,0 +1,112 @@
+// https://docs.cypress.io/api/introduction/api.html
+
+describe('Login, Logout, Create Account', () => {
+  it('Visits the login page', () => {
+    cy.visit('/')
+    cy.get('.wam-app').should('be.visible')
+    cy.contains('span', 'WHACK')
+    cy.contains('span', '-a-Mole')
+    cy.get('#go-create-account-btn').should('be.visible')
+    cy.get('#login-btn').should('be.visible')
+  })
+  it('Visits the create-account page and try to create an account (error)', () => {
+    cy.visit('/')
+    cy.get('.wam-app').should('be.visible')
+    cy.get('#go-create-account-btn').should('be.visible')
+    cy.get('#login-btn').should('be.visible')
+    cy.get('#go-create-account-btn').click()
+    cy.get('#input-10').type('rsfarrow@ncsu.edu')
+    cy.get('#input-13').type('Sam')
+    cy.get('#input-24').type('Password')
+    cy.get('#input-28').type('Password')
+    cy.get('#create-account-btn').click()
+    cy.get('.v-snack__wrapper').should('be.visible')
+    cy.get('.error').should('be.visible')
+    cy.get('span').contains('Close').click()
+    cy.get('.v-snack__wrapper').should('not.be.visible')
+  })
+  it('Visits the login page then navigate to the about page', () => {
+    cy.visit('/')
+    cy.get('.wam-app').should('be.visible')
+    cy.get('#login-btn').should('be.visible')
+    cy.get('#about-page-btn').click()
+    cy.contains('About Me:')
+    cy.contains('About Game:')
+  })
+})
+describe('Whack-A-Mole test', () => {
+  beforeEach(() => {
+    cy.visit('/')
+    cy.get('.wam-app').should('be.visible')
+    cy.get('#login-btn').should('be.visible')
+    cy.get('#input-10').type('rsfarrow+test@ncsu.edu')
+    cy.get('#input-13').type('password')
+    cy.get('#login-btn').click()
+    cy.get('#wam-game').should('be.visible')
+  })
+  afterEach(() => {
+    cy.get('#nav-icon').click()
+    cy.get('#logout-btn').click()
+  })
+  it('Start game', () => {
+    cy.get('#start-btn').click()
+    cy.contains('15')
+    cy.contains('14')
+    cy.get('#settings-btn').should('be.disabled')
+    cy.get('#start-btn').should('be.disabled')
+    cy.get('#bush').should('be.visible')
+    cy.get('#mole').should('be.visible')
+  })
+  it('Change Settings', () => {
+    cy.get('#settings-btn').click()
+    cy.contains('Settings')
+    cy.get('#mole-btn-1').click()
+    cy.get('#rate-btn-1').click()
+    cy.get('.dark-mode > .v-input__control > .v-input__slot > .v-input--selection-controls__input > .v-input--selection-controls__ripple').click()
+    cy.get('.cursor > .v-input__control > .v-input__slot > .v-input--selection-controls__input > .v-input--selection-controls__ripple').click()
+    cy.get('#settings-save').click()
+    cy.get('.moles').should('have.length', 5)
+  })
+  it('Cancel Settings', () => {
+    cy.get('#settings-btn').click()
+    cy.contains('Settings')
+    cy.get('#mole-btn-1').click()
+    cy.get('#rate-btn-1').click()
+    cy.get('#settings-cancel').click()
+    cy.get('.moles').should('have.length', 3)
+  })
+})
+describe('Highscore test', () => {
+  const normalizeNum = (s) => s.replace(/\s/g, '')
+  beforeEach(() => {
+    cy.visit('/')
+    cy.get('.wam-app').should('be.visible')
+    cy.get('#login-btn').should('be.visible')
+    cy.get('#input-10').type('rsfarrow+test@ncsu.edu')
+    cy.get('#input-13').type('password')
+    cy.get('#login-btn').click()
+    cy.get('#wam-game').should('be.visible')
+    cy.get('#nav-icon').click()
+    cy.get('#nav-item-1').click()
+  })
+  afterEach(() => {
+    cy.get('#nav-icon').click()
+    cy.get('#logout-btn').click()
+  })
+  it('Should have top 5 highscores', () => {
+    cy.contains('All Time Highscores')
+    cy.get('.table-row').should('have.length', 5)
+  })
+  it('Should have highest score on top', () => {
+    let highestScore
+    cy.contains('All Time Highscores')
+    cy.get('#hs-data-score-0').then(
+      ($score) => {
+        highestScore = normalizeNum($score.text())
+      })
+    cy.get('#hs-data-score-4').then(($score) => {
+      let lowestScore = normalizeNum($score.text())
+      expect(highestScore).to.be.greaterThan(lowestScore)
+    })
+  })
+})
