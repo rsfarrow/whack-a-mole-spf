@@ -8,12 +8,15 @@ const HOME_ROUTE = '/login'
 const HOME_NAME = 'home'
 const GAME_ROUTE = '/game'
 const GAME_NAME = 'game'
+const ABOUT_ROUTE = '/about'
+const ABOUT_NAME = 'about'
 const HIGHSCORE_NAME = 'highscores'
 const HIGHSCORE_ROUTE = '/highscores'
 // Constants for components and lazy loading
 const Login = () => import('./views/login.vue')
 const Game = () => import('./views/whack-a-mole.vue')
 const Highscore = () => import('./views/highscores.vue')
+const About = () => import('./views/about.vue')
 export default new Router({
   base: process.env.BASE_URL,
   routes: [
@@ -42,6 +45,11 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         store.getters.loggedIn ? next() : next({ name: HOME_NAME })
       }
+    },
+    {
+      path: ABOUT_ROUTE,
+      name: ABOUT_NAME,
+      component: About
     }
   ]
 })

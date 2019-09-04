@@ -110,7 +110,7 @@
           <v-spacer />
           <v-btn
             text
-            color="secondary"
+            :color="darkMode ? 'acent' : 'secondary'"
             @click="$emit('click:outside', false)"
           >
             Cancel

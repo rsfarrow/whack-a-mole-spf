@@ -111,6 +111,21 @@
         Close
       </v-btn>
     </v-snackbar>
+    <v-footer class="ml-auto pt-auto"
+              align-end
+              :color="'transparent'"
+    >
+      <v-spacer />
+      <v-btn
+        :input-value="false"
+        icon
+        text
+        small
+        @click="nav()"
+      >
+        <v-icon> mdi-information </v-icon>
+      </v-btn>
+    </v-footer>
   </v-layout>
 </template>
 <script>
@@ -180,6 +195,9 @@ export default {
           this.snackbar = true
         }
       })
+    },
+    nav () {
+      this.$router.push({ name: 'about' })
     }
   }),
   computed: {

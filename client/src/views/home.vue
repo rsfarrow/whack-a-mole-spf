@@ -73,7 +73,7 @@ import { APIService } from '../services/api-service.js'
 const apiService = new APIService()
 const WAM_TITLE = 'Whack-A-Mole'
 const HIGHSCORE_TITLE = 'High Scores'
-// const ABOUT_TITLE = 'ABOUT'
+const ABOUT_TITLE = 'About'
 export default {
   name: 'home',
   components: {
@@ -83,8 +83,8 @@ export default {
       showNav: false,
       items: [
         { title: WAM_TITLE, icon: 'mdi-gamepad-square' },
-        { title: HIGHSCORE_TITLE, icon: 'mdi-counter' }
-        // { title: 'About', icon: 'mdi-information' }
+        { title: HIGHSCORE_TITLE, icon: 'mdi-counter' },
+        { title: ABOUT_TITLE, icon: 'mdi-information' }
       ]
     }
   },
@@ -104,6 +104,8 @@ export default {
         this.$router.push('game')
       } else if (item === HIGHSCORE_TITLE) {
         this.$router.push('highscores')
+      } else if (item === ABOUT_TITLE) {
+        this.$router.push('about')
       }
     }
   }
