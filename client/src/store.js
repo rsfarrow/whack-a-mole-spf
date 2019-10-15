@@ -13,16 +13,18 @@ export default new Vuex.Store({
   state: {
 
     loggedIn: false,
+    guest: false,
     user: {},
     // Default settings
     settings: defaultSettings
   },
   getters: {
     name: state => state.user.name,
-    email: state => state.user.email,
+    email: state => state.user.email || 'Guest',
     loggedIn: state => state.loggedIn,
     darkMode: state => state.settings.darkMode,
-    customCursor: state => state.settings.customCursor
+    customCursor: state => state.settings.customCursor,
+    guestUser: state => state.guest
   },
   mutations: {
     updateLoggedIn (state, loggedIn) {
@@ -42,6 +44,9 @@ export default new Vuex.Store({
     },
     resetSettings (state) {
       state.settings = defaultSettings
+    },
+    updateGuestSettings (state, guest) {
+      state.guest = guest
     }
   },
   actions: {
@@ -53,6 +58,13 @@ export default new Vuex.Store({
       commit('updateLoggedIn', false)
       commit('clearUser')
       commit('resetSettings')
+      commit('updateGuestSettings', false)
+    },
+    signInAsGuest ({ commit }, name) {
+      commit('updateLoggedIn', true)
+      commit('updateGuestSettings', true)
+      commit('updateUser', { name: name, email: '' })
+      commit('updateGuestSettings', true)
     },
     turnOnDarkMode ({ commit }) {
       commit('updateDarkMode', true)

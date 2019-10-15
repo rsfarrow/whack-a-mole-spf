@@ -75,6 +75,7 @@ import { mapGetters } from 'vuex'
 import { APIService } from '../services/api-service.js'
 const apiService = new APIService()
 const WAM_TITLE = 'Whack-A-Mole'
+const TTT_TITLE = 'Tic-Tac-Toe'
 const HIGHSCORE_TITLE = 'High Scores'
 const ABOUT_TITLE = 'About'
 export default {
@@ -86,29 +87,39 @@ export default {
       showNav: false,
       items: [
         { title: WAM_TITLE, icon: 'mdi-gamepad-square' },
+        { title: TTT_TITLE, icon: 'mdi-gamepad-round' },
         { title: HIGHSCORE_TITLE, icon: 'mdi-counter' },
         { title: ABOUT_TITLE, icon: 'mdi-information' }
       ]
     }
   },
   computed: {
-    ...mapGetters(['loggedIn', 'name', 'email', 'darkMode'])
+    ...mapGetters(['loggedIn', 'name', 'email', 'darkMode', 'guestUser'])
   },
   methods: {
     logout () {
-      apiService.logoutUser().then(() => {
-        this.$store.dispatch('logOutUser')
-        this.$vuetify.theme.dark = this.darkMode
-        this.$router.push('login')
-      })
+      if (this.guestUser) {
+        this.localLogout()
+      } else {
+        apiService.logoutUser().then(() => {
+          this.localLogout()
+        })
+      }
+    },
+    localLogout () {
+      this.$store.dispatch('logOutUser')
+      this.$vuetify.theme.dark = this.darkMode
+      this.$router.push('login')
     },
     nav (item) {
       if (item === WAM_TITLE) {
-        this.$router.push('game')
+        this.$router.push('whack-a-mole')
       } else if (item === HIGHSCORE_TITLE) {
         this.$router.push('highscores')
       } else if (item === ABOUT_TITLE) {
         this.$router.push('about')
+      } else if (item === TTT_TITLE) {
+        this.$router.push('tic-tac-toe')
       }
     }
   }

@@ -29,6 +29,17 @@
       />
       <div class="mt-3">
         <v-btn
+          id="login-btn"
+          :disabled="!valid"
+          color="success"
+          :width="'100%'"
+          @click="loginUser()"
+        >
+          Login
+        </v-btn>
+      </div>
+      <div class="mt-3">
+        <v-btn
           id="go-create-account-btn"
           color="secondary"
           class="mr-4"
@@ -37,13 +48,11 @@
           Create Account
         </v-btn>
         <v-btn
-          id="login-btn"
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          @click="loginUser()"
+          id="go-create-account-btn"
+          color="primary"
+          @click="showGuestLogin = true"
         >
-          Login
+          Sign in as Guest
         </v-btn>
       </div>
     </v-form>
@@ -115,6 +124,42 @@
         Close
       </v-btn>
     </v-snackbar>
+
+    <v-dialog v-model="showGuestLogin"
+              persistent
+              max-width="50%"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          What can we call you?
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="name"
+            :rules="[rules.required]"
+            label="Name"
+            required
+            @keyup.enter="loginAsGuest()"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <div class="flex-grow-1" />
+          <v-btn color="secondary"
+                 text
+                 @click="showGuestLogin = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn color="success"
+                 text
+                 @click="loginAsGuest()"
+          >
+            Continue As Guest
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-footer class="ml-auto pt-auto"
               align-end
               :color="'transparent'"
@@ -156,6 +201,7 @@ export default {
     confPassword: '',
     snackMessage: '',
     error: false,
+    showGuestLogin: false,
     rules: {
       required: value => !!value || 'Required field.',
       min: v => (v && v.length >= 8) || 'Min 8 characters',
@@ -182,6 +228,11 @@ export default {
       this.showPass = false
       this.showConfPass = false
       this.$refs.form.reset()
+    },
+    loginAsGuest () {
+      this.showGuestLogin = false
+      this.$store.dispatch('signInAsGuest', this.name)
+      this.$router.push('game')
     },
     createAccount () {
       let payload = {

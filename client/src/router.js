@@ -6,15 +6,18 @@ Vue.use(Router)
 // Constants for routes
 const HOME_ROUTE = '/login'
 const HOME_NAME = 'home'
-const GAME_ROUTE = '/game'
-const GAME_NAME = 'game'
+const WHACK_ROUTE = '/whack-a-mole'
+const WHACK_NAME = 'whack-a-mole'
+const TTT_NAME = 'tic-tac-toe'
+const TTT_ROUTE = '/tic-tac-toe'
 const ABOUT_ROUTE = '/about'
 const ABOUT_NAME = 'about'
 const HIGHSCORE_NAME = 'highscores'
 const HIGHSCORE_ROUTE = '/highscores'
 // Constants for components and lazy loading
 const Login = () => import('./views/login.vue')
-const Game = () => import('./views/whack-a-mole.vue')
+const Whack = () => import('./views/whack-a-mole.vue')
+const Tic = () => import('./views/tic-tac.vue')
 const Highscore = () => import('./views/highscores.vue')
 const About = () => import('./views/about.vue')
 export default new Router({
@@ -22,7 +25,7 @@ export default new Router({
   routes: [
     { path: '*',
       beforeEnter: (to, from, next) => {
-        store.getters.loggedIn ? next({ name: GAME_NAME }) : next({ name: HOME_NAME })
+        store.getters.loggedIn ? next({ name: WHACK_NAME }) : next({ name: HOME_NAME })
       }
     },
     {
@@ -31,9 +34,17 @@ export default new Router({
       component: Login
     },
     {
-      path: GAME_ROUTE,
-      name: GAME_NAME,
-      component: Game,
+      path: WHACK_ROUTE,
+      name: WHACK_NAME,
+      component: Whack,
+      beforeEnter: (to, from, next) => {
+        store.getters.loggedIn ? next() : next({ name: HOME_NAME })
+      }
+    },
+    {
+      path: TTT_ROUTE,
+      name: TTT_NAME,
+      component: Tic,
       beforeEnter: (to, from, next) => {
         store.getters.loggedIn ? next() : next({ name: HOME_NAME })
       }
