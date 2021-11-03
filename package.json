@@ -26,7 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.9",
     "path": "^0.12.7",
-    "validator": "^11.1.0",
+    "validator": "^13.7.0",
     "vue": "^2.6.10",
     "vue-confetti": "^2.0.1",
     "vue-router": "^3.0.3",
